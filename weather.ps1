@@ -1,5 +1,6 @@
 ﻿# Simple weather script that parses html data from yahoo.com
 # Will break if yahoo changes html tags or classes used to get raw data
+# 
 
 $tempTag = 'span'
 $tempClass = 'Va(t)'
@@ -28,6 +29,5 @@ $weatherData = New-Object -TypeName PSObject
 Add-Member -InputObject $weatherData -MemberType NoteProperty -Name City -Value $city
 Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Condition -Value $condition
 Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Temp -Value $temp$unit
-#Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Unit -Value $unit
 Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Time -Value $dateValue
 echo $weatherData | ft -AutoSize
