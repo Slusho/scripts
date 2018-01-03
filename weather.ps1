@@ -1,6 +1,5 @@
 ﻿# Simple weather script that parses html data from yahoo.com
 # Will break if yahoo changes html tags or classes used to get raw data
-# 
 
 $tempTag = 'span'
 $tempClass = 'Va(t)'
@@ -10,7 +9,7 @@ $condClass = 'description Va(m) Px(2px) Fz(1.3em)--sm Fz(1.6em)'
 $unitTag = 'button'
 $unitClass = 'unit Tt(c) Fz(.2em) Fw(200) O(n) P(6px) Va(t) D(b) Lh(1em) Tsh($temperature-text-shadow) M(a) C(#fff)'
 $dateTag = 'div'
-$dateValue = Date
+$dateValue = Date +%x,%I:%M
 
 $URL = 'https://www.yahoo.com/news/weather/'
 $HTML = Invoke-WebRequest -Uri $URL
@@ -25,9 +24,11 @@ $condition = getData $tempTag $condClass
 $temp = getData $tempTag $tempClass
 $unit = getData $unitTag $unitClass
 
-$weatherData = New-Object -TypeName PSObject
-Add-Member -InputObject $weatherData -MemberType NoteProperty -Name City -Value $city
-Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Condition -Value $condition
-Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Temp -Value $temp$unit
-Add-Member -InputObject $weatherData -MemberType NoteProperty -Name Time -Value $dateValue
-echo $weatherData | ft -AutoSize
+$parm = @{
+    City = $city
+    Condition = $condition
+    Temp = "$temp$unit"
+    Time = $dateValue
+}
+
+New-Object -TypeName PSObject -Property $parm | ft -AutoSize

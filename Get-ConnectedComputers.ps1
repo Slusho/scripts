@@ -18,22 +18,30 @@ function testRange ($from, $to){
             $ipArray += "$subNet$i"
     }
     $ipArray | ForEach-Object{
-        $status = New-Object -TypeName psobject
+        #$status = New-Object -TypeName psobject -Property $param
         $testConn = Test-Connection -ComputerName $_ -BufferSize 16 -Count 2 -ErrorAction 0
         if(!($testConn)){
-             #Write-Output "{$_ Not Responding}"
-             Add-Member -InputObject $status -MemberType NoteProperty -Name 'IP Address' -Value $_
-             Add-Member -InputObject $status -MemberType NoteProperty -Name Name -Value 'IP not in use'
-             echo $status |ft -AutoSize
+            $param = @{
+                IP = $_
+                Name = 'IP not in use'
+            }
+             #Add-Member -InputObject $status -MemberType NoteProperty -Name 'IP Address' -Value $_
+             #Add-Member -InputObject $status -MemberType NoteProperty -Name Name -Value 'IP not in use'
+             New-Object -TypeName psobject -Property $param | ft -AutoSize
         }
         else{
             $obj = Get-WmiObject -ComputerName $_ -Class Win32_ComputerSystem 
-
-            Add-Member -InputObject $status -MemberType NoteProperty -Name 'IP Address' -Value $_
-            Add-Member -InputObject $status -MemberType NoteProperty -Name Name -Value $obj.Name
-            Add-Member -InputObject $status -MemberType NoteProperty -Name Manufacturer -Value $obj.Manufacturer
-            Add-Member -InputObject $status -MemberType NoteProperty -Name Model -Value $obj.Model
-            echo $status | ft -AutoSize
+            $param = @{
+                IP = $_
+                Name = $obj.Name
+                Manufacturer = $obj.Manufacturer
+                Model = $obj.Model
+            }
+            #Add-Member -InputObject $status -MemberType NoteProperty -Name 'IP Address' -Value $_
+            #Add-Member -InputObject $status -MemberType NoteProperty -Name Name -Value $obj.Name
+            #Add-Member -InputObject $status -MemberType NoteProperty -Name Manufacturer -Value $obj.Manufacturer
+            #Add-Member -InputObject $status -MemberType NoteProperty -Name Model -Value $obj.Model
+            New-Object -TypeName psobject -Property $param | ft -AutoSize
         }
     }
 }
