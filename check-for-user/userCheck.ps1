@@ -23,3 +23,5 @@ foreach($computer in $compName){
 }
 
 Write-Host $count "out of" $total "hosts."
+#del hostNames.txt
+#Write-Host "hostNames.txt has been deleted"

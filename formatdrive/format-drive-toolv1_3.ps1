@@ -125,7 +125,7 @@ do{
 
         #output results of diskpart
         Get-Content output.txt
-
+        Remove-Item  output.txt
         ECHO "Disk $dl was formtatted successfully."
 
         #breaks loop

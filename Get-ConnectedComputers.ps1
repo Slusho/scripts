@@ -25,8 +25,7 @@ function testRange ($from, $to){
                 IP = $_
                 Name = 'IP not in use'
             }
-             #Add-Member -InputObject $status -MemberType NoteProperty -Name 'IP Address' -Value $_
-             #Add-Member -InputObject $status -MemberType NoteProperty -Name Name -Value 'IP not in use'
+
              New-Object -TypeName psobject -Property $param | ft -AutoSize
         }
         else{
@@ -37,10 +36,7 @@ function testRange ($from, $to){
                 Manufacturer = $obj.Manufacturer
                 Model = $obj.Model
             }
-            #Add-Member -InputObject $status -MemberType NoteProperty -Name 'IP Address' -Value $_
-            #Add-Member -InputObject $status -MemberType NoteProperty -Name Name -Value $obj.Name
-            #Add-Member -InputObject $status -MemberType NoteProperty -Name Manufacturer -Value $obj.Manufacturer
-            #Add-Member -InputObject $status -MemberType NoteProperty -Name Model -Value $obj.Model
+
             New-Object -TypeName psobject -Property $param | ft -AutoSize
         }
     }
