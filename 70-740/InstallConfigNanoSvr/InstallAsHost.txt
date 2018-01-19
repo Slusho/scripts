@@ -1,0 +1,55 @@
+Download and install Windows ADK (Assesment and Deployment Kit)
+https://developer.microsoft.com/en-us/windows/hardware/windows-assessment-deployment-kit
+
+In lab envirornment, if using Hyper-V which does not allow booting VM from USB, perform the following steps:
+Create a new VHDX Hard Disk Image 32Gb in size name it BootMedia
+Format drive in DiskPart
+    List Disk
+    Select Disk Number
+    Clean
+    Create Partition Primary
+    Format FS=FAT32 Quick
+    Assign
+    Active
+After formating, mount the virtual drive
+Launch the Deployment and Imaging Tools Envirornment as administrator and type the following commands
+'copype amd64 c:\winpe_amd64' 
+'makewinpemedia /ufd c:\winpe_amd64 [location of mounted drive IE e:]'
+Copy NanoServer to the WinPE boot media
+    Create a folder on boot media name it nanoserver1
+    Copy Packages folder and NanoServer.wim from the NanoServer folder on the Windows Server 2016 disk or ISO into nanoserver1 folder on boot media
+Unmount boot media
+Create new VM
+    Generation 2
+    512MB Memory
+    Choose your virtual switch
+    Create new virtual disk 32Gb
+    Install OS later
+    Finish
+    Go to settings of new VM, SCSI controller, add hard drive
+    Browse to BootMedia VHDX
+    Go to firmware and move up BootMedia hard drive to top
+    Connect and start VM and it will boot from boot media
+Now ready to install Nano Server to host
+At CMD prompt diskpart to format hard drive
+    List Disk 
+    Select Disk 0
+    Clean
+    Convert gpt
+    Create partition efi size=10 #system partition
+    Format quick fs=fat32 label="system"
+    Assign letter="s"
+    Create partition msr size=128
+    Create partition Primary
+    Format quick fs=ntfs label="nanoserver"
+    Assign letter="n"
+    exit
+Apply Image
+    Dism /apply-image /imagefile:c:\nanoserver1\nanoserver.wim /index:1 /applydir:n:\ #change to c:\ in production
+    bcdboot.exe n:\windows /s s: #copies boot files 
+    wpeutil reboot
+Change the boot order in VM settings to boot from nanoserver drive not from BootMedia and boot again
+Will fail as it needs drivers, this is normal :)
+
+
+
